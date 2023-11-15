@@ -209,6 +209,34 @@ def from_dlc_file(
     return ds
 
 
+def from_lp_file(
+    file_path: Union[Path, str], fps: Optional[float] = None
+) -> xr.Dataset:
+    """Load pose tracking data from a LightningPose (LP) output file
+    into an xarray Dataset.
+
+    Parameters
+    ----------
+    file_path : pathlib.Path or str
+        Path to the file containing the DLC predicted poses, either in ".h5"
+        or ".csv" format.
+    fps : float, optional
+        The number of frames per second in the video. If None (default),
+        the `time` coordinates will be in frame numbers.
+
+    Returns
+    -------
+    xarray.Dataset
+        Dataset containing the pose tracks, confidence scores, and metadata.
+
+    """
+
+    ds = from_dlc_file(file_path, fps)
+    ds.attrs["source_software"] = "LightningPose"
+
+    return ds
+
+
 def _load_from_sleap_analysis_file(
     file_path: Path, fps: Optional[float]
 ) -> ValidPoseTracks:
